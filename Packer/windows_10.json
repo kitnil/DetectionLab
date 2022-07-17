@@ -165,7 +165,8 @@
       "type": "powershell",
       "scripts": [
         "./scripts/set-powerplan.ps1",
-        "./scripts/docker/disable-windows-defender.ps1"
+        "./scripts/docker/disable-windows-defender.ps1",
+        "./scripts/looking-glass.ps1"
       ]
     },
     {
