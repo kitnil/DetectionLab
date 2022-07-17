@@ -31,17 +31,37 @@
                     <CreatePartitions>
                         <CreatePartition wcm:action="add">
                             <Order>1</Order>
+                            <Type>EFI</Type>
+                            <Size>100</Size>
+                        </CreatePartition>
+                        <CreatePartition wcm:action="add">
+                            <Order>2</Order>
+                            <Type>MSR</Type>
+                            <Size>16</Size>
+                        </CreatePartition>
+                        <CreatePartition wcm:action="add">
+                            <Order>3</Order>
                             <Type>Primary</Type>
                             <Extend>true</Extend>
                         </CreatePartition>
                     </CreatePartitions>
                     <ModifyPartitions>
                         <ModifyPartition wcm:action="add">
+                            <Order>1</Order>
+                            <Format>FAT32</Format>
+                            <Label>System</Label>
+                            <PartitionID>1</PartitionID>
+                        </ModifyPartition>
+                        <ModifyPartition wcm:action="add">
+                            <Order>2</Order>
+                            <PartitionID>2</PartitionID>
+                        </ModifyPartition>
+                        <ModifyPartition wcm:action="add">
                             <Extend>false</Extend>
                             <Format>NTFS</Format>
                             <Letter>C</Letter>
-                            <Order>1</Order>
-                            <PartitionID>1</PartitionID>
+                            <Order>3</Order>
+                            <PartitionID>3</PartitionID>
                             <Label>Windows 10</Label>
                         </ModifyPartition>
                     </ModifyPartitions>
@@ -77,7 +97,7 @@
                 <OSImage>
                     <InstallTo>
                         <DiskID>0</DiskID>
-                        <PartitionID>1</PartitionID>
+                        <PartitionID>3</PartitionID>
                     </InstallTo>
                     <WillShowUI>OnError</WillShowUI>
                     <InstallToAvailablePartition>false</InstallToAvailablePartition>
