@@ -104,7 +104,7 @@
       "accelerator": "kvm",
       "disk_size": "{{user `disk_size`}}",
       "output_directory": "{{ user `packer_build_dir`}}",
-      "firmware": "/nix/store/jk2yj6fvl38as63afxxd1wsjz03xd07h-OVMF-202102-fd/FV/OVMF_CODE.fd",
+      "firmware": "/home/oleg/.nix-profile/FV/OVMF_CODE.fd",
       "qemuargs": [
         [
           "-m",
@@ -128,7 +128,7 @@
         ],
         [
           "-bios",
-          "/nix/store/jk2yj6fvl38as63afxxd1wsjz03xd07h-OVMF-202102-fd/FV/OVMF.fd"
+          "/home/oleg/.nix-profile/FV/OVMF.fd"
         ]
       ],
       "floppy_files": [
