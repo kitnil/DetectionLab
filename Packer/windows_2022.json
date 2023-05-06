@@ -1,0 +1,99 @@
+{
+  "builders": [
+    {
+      "type": "qemu",
+      "vm_name": "WindowsServer2022",
+      "communicator": "winrm",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "headless": false,
+      "boot_wait": "6m",
+      "boot_command": "",
+      "winrm_username": "vagrant",
+      "winrm_password": "vagrant",
+      "winrm_timeout": "4h",
+      "shutdown_command": "a:/sysprep.bat",
+      "shutdown_timeout": "2h",
+      "accelerator": "kvm",
+      "disk_size": "{{user `disk_size`}}",
+      "output_directory": "{{ user `packer_build_dir`}}",
+      "qemuargs": [
+        [
+          "-m",
+          "2048"
+        ],
+        [
+          "-smp",
+          "2"
+        ],
+        [
+          "-drive",
+          "file={{ user `virtio_win_iso` }},media=cdrom,index=3"
+        ],
+        [
+          "-drive",
+          "file={{ user `packer_build_dir`}}/{{ .Name }},if=virtio,cache=writeback,discard=ignore,format=qcow2,index=1"
+        ],
+        [
+          "-drive",
+          "file={{ user `iso_url` }},media=cdrom,index=2"
+        ]
+      ],
+      "floppy_files": [
+        "{{user `autounattend_virtio`}}",
+        "./floppy/WindowsPowershell.lnk",
+        "./floppy/WindowsPowershell.lnk",
+        "./floppy/PinTo10.exe",
+        "./scripts/unattend.xml",
+        "./scripts/sysprep.bat",
+        "./scripts/disable-screensaver.ps1",
+        "./scripts/disable-winrm.ps1",
+        "./scripts/enable-winrm.ps1",
+        "./scripts/microsoft-updates.bat",
+        "./scripts/win-updates.ps1",
+        "./scripts/install-credssp-fix.ps1"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "windows-shell",
+      "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
+      "scripts": [
+        "./scripts/enable-rdp.bat"
+      ]
+    },
+    {
+      "type": "powershell",
+      "scripts": [
+        "./scripts/install-credssp-fix.ps1",
+        "./scripts/vm-guest-tools.ps1",
+        "./scripts/debloat-windows.ps1",
+        "./scripts/download-microsoft-ata.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "windows-shell",
+      "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
+      "scripts": [
+        "./scripts/pin-powershell.bat",
+        "./scripts/set-winrm-automatic.bat",
+        "./scripts/compile-dotnet-assemblies.bat",
+        "./scripts/uac-enable.bat",
+        "./scripts/compact.bat"
+      ]
+    }
+  ],
+  "variables": {
+    "iso_url": "https://software-static.download.prss.microsoft.com/sg/download/888969d5-f34g-4e03-ac9d-1f9786c66749/SERVER_EVAL_x64FRE_en-us.iso",
+    "iso_checksum": "sha256:3e4fa6d8507b554856fc9ca6079cc402df11a8b79344871669f0251535255325",
+    "disk_size": "61440",
+    "autounattend": "./answer_files/2022/Autounattend.xml",
+    "virtio_win_iso": "./virtio-win.iso",
+    "autounattend_virtio": "./answer_files/2022_virtio/Autounattend.xml",
+    "packer_build_dir": "./win2022"
+  }
+}
